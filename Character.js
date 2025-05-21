@@ -7,6 +7,9 @@ export class Character {
     this.tileX = 1;
     this.tileY = 1;
     this.held_directions = [];
+    this.moveCooldown = 150; // in ms, adjust to make movement slower/faster
+    this.lastMoveTime = 0;
+
 
     this.directions = {
       up: "up",
@@ -40,33 +43,41 @@ export class Character {
     });
   }
 
-  updatePosition() {
-    const pixelSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--pixel-size"));
-    const tileSize = pixelSize * 16;
+ updatePosition() {
+  const now = Date.now();
+  if (now - this.lastMoveTime < this.moveCooldown) return;
 
-    const held = this.held_directions[0];
-    let newX = this.tileX;
-    let newY = this.tileY;
+  const pixelSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--pixel-size"));
+  const tileSize = pixelSize * 16;
 
-    if (held === "right") newX++;
-    if (held === "left") newX--;
-    if (held === "down") newY++;
-    if (held === "up") newY--;
+  const held = this.held_directions[0];
+  let newX = this.tileX;
+  let newY = this.tileY;
 
-    if (this.levelMap[newY] && this.levelMap[newY][newX] === 0) {
-      this.tileX = newX;
-      this.tileY = newY;
-      this.character.setAttribute("facing", held);
-    }
+  if (held === "right") newX++;
+  if (held === "left") newX--;
+  if (held === "down") newY++;
+  if (held === "up") newY--;
 
-    this.character.setAttribute("walking", held ? "true" : "false");
-
-    const x = this.tileX * tileSize;
-    const y = this.tileY * tileSize;
-    const camera_left = pixelSize * 66;
-    const camera_top = pixelSize * 42;
-
-    this.map.style.transform = `translate3d(${-x + camera_left}px, ${-y + camera_top}px, 0)`;
-    this.character.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  if (held) {
+    this.character.setAttribute("facing", held); // ✅ Always set direction
   }
+
+  if (this.levelMap[newY] && this.levelMap[newY][newX] === 0) {
+    this.tileX = newX;
+    this.tileY = newY;
+    this.lastMoveTime = now; // ✅ Only move if walkable
+  }
+
+  this.character.setAttribute("walking", held ? "true" : "false");
+
+  const x = this.tileX * tileSize;
+  const y = this.tileY * tileSize;
+  const camera_left = pixelSize * 70;
+  const camera_top = pixelSize * 65;
+
+  this.map.style.transform = `translate3d(${-x + camera_left}px, ${-y + camera_top}px, 0)`;
+  this.character.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+}
+
 }
