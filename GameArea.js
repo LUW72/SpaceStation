@@ -1,11 +1,19 @@
 import { Character } from "./Character.js";
 
 const TILE_TYPES = {
-  0: { name: 'floor', class: 'floor' },
-  1: { name: 'wall', class: 'wall' },
-  2: { name: 'lava', class: 'lava' },        // Add `.lava` CSS class
-  3: { name: 'grass', class: 'grass' },      // Add `.grass` CSS class
-  4: { name: 'door', class: 'door' },        // Add `.door` CSS class
+  0: { name: 'floor'},
+  1: { name: 'wall'},
+  2: { name: 'wall_top'},        
+  3: { name: 'wall_bottom'},      
+  4: { name: 'door' },        
+  5: { name: 'floor_cracked'},   
+  6: { name: 'wall_corner_SE'},   
+  7: { name: 'wall_corner_NE'},   
+  8: { name: 'wall_corner_NW'},   
+  9: { name: 'wall_corner_SW'},   
+  10: { name: 'wall_top_2'},   
+
+  
 };
 
 export class GameArea {
@@ -14,18 +22,18 @@ export class GameArea {
     this.characterElement = document.querySelector(".character");
     this.mapElement = document.querySelector(".map");
     this.levelMap = [
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 10, 10, 10, 10, 10, 4, 10, 10, 10, 10, 10, 7],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 1], // lava at [4][10]
-      [1, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1], // grass at [5][5]
+      [1, 0, 0, 0, 5, 0, 0, 0, 1, 0, 2, 0, 1], 
+      [1, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1], 
       [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 1, 0, 0, 0, 0, 0, 0, 4, 0, 0, 1], // door at [7][9]
+      [1, 0, 1, 0, 0, 0, 0, 0, 0, 4, 0, 0, 1], 
       [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1],
       [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8],
     ];
   
     this.init();
@@ -33,6 +41,7 @@ export class GameArea {
 
   init() 
   {
+    this.setMapSize();
     this.renderTiles();
     this.character = new Character(this.mapElement, this.characterElement, this.levelMap);
     this.loop();
@@ -47,10 +56,10 @@ export class GameArea {
     for (let row = 0; row < this.levelMap.length; row++) {
       for (let col = 0; col < this.levelMap[row].length; col++) {
         const tileType = this.levelMap[row][col];
-        const tileInfo = TILE_TYPES[tileType] || { name: 'unknown', class: 'unknown' };
+        const tileInfo = TILE_TYPES[tileType] || { name: 'unknown' };
 
         const tile = document.createElement("div");
-        tile.classList.add("tile", tileInfo.class);
+        tile.classList.add("tile", tileInfo.name);
 
         tile.dataset.tileType = tileInfo.name;
 
@@ -62,6 +71,17 @@ export class GameArea {
 
     this.mapElement.appendChild(this.characterElement);
   }
+
+    setMapSize() 
+    {
+        const pixelSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--pixel-size"));
+        const tileSize = pixelSize * 16;
+        const rows = this.levelMap.length;
+        const cols = this.levelMap[0].length;
+
+        this.mapElement.style.width = `${cols * tileSize}px`;
+        this.mapElement.style.height = `${rows * tileSize}px`;
+    }
 
   loop() {
     this.character.updatePosition();

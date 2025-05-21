@@ -111,85 +111,7 @@ body {
   }
 }
 
-.dpad {
-  position: absolute;
-  right: calc(var(--pixel-size) * 2);
-  bottom: calc(var(--pixel-size) * 2);
-  width: calc(var(--pixel-size) * 37);
-  height: calc(var(--pixel-size) * 38);
-}
-.dpad-button {
-  appearance: none;
-  outline: 0;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-}
-.dpad-button svg {
-  display: block;
-  height: calc(var(--pixel-size) * 13);
-}
 
-.dpad-button.pressed .Arrow_arrow-inset {
-  stroke: #07c2cc;
-}
-.dpad-button.pressed .Arrow_arrow-body {
-  stroke: #17dfea;
-}
-
-.dpad-up {
-  position: absolute;
-  left: calc(var(--pixel-size) * 12);
-  top: 0;
-}
-.dpad-down {
-  position: absolute;
-  bottom: var(--pixel-size);
-  left: calc(var(--pixel-size) * 12);
-}
-.dpad-left {
-  position: absolute;
-  top: calc(var(--pixel-size) * 12);
-  left: 0;
-}
-.dpad-right {
-  position: absolute;
-  top: calc(var(--pixel-size) * 12);
-  right: 0;
-}
-
-.dpad {
-  user-select: none;
-}
-
-.corner_topleft,
-.corner_topright,
-.corner_bottomleft,
-.corner_bottomright {
-  position: absolute;
-  width: var(--pixel-size);
-  height: var(--pixel-size);
-  background: var(--bg);
-  z-index: 2;
-}
-
-.corner_topleft {
-  top: calc(var(--pixel-size) * -1);
-  left: calc(var(--pixel-size) * -1);
-}
-.corner_topright {
-  top: calc(var(--pixel-size) * -1);
-  right: calc(var(--pixel-size) * -1);
-}
-.corner_bottomleft {
-  bottom: calc(var(--pixel-size) * -1);
-  left: calc(var(--pixel-size) * -1);
-}
-.corner_bottomright {
-  bottom: calc(var(--pixel-size) * -1);
-  right: calc(var(--pixel-size) * -1);
-}
 
 .headline {
   position: absolute;
@@ -241,7 +163,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #61ddf7;
+  background: #0d0d0d;
   position: relative;
 }
 
@@ -253,8 +175,81 @@ body {
 }
 
 
+.map {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+}
 
 .tile {
+  position: absolute;
+  width: calc(var(--pixel-size) * 16);
+  height: calc(var(--pixel-size) * 16);
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* === TILE TYPES === */
+
+.tile.floor {
+  background-image: url("./textures/floor_01.png"); /* Example: light stone */
+}
+
+.tile.floor_cracked {
+  background-image: url("./textures/floor_01_1.png"); 
+}
+
+.tile.wall_corner_SE {
+  background-image: url("./textures/wall_corner_SouthEast.png"); 
+}
+
+
+.tile.wall {
+  background-image: url("./textures/wall_right.png"); /* Example: dark brick wall */
+}
+
+.tile.wall_top {
+  background-image: url("./textures/wall_top.png"); /* Animated lava if desired */
+}
+
+.tile.wall_top_2 {
+  background-image: url("./textures/wall_top_2.png"); /* Animated lava if desired */
+}
+
+
+.tile.grass {
+  background-image: url("./textures/grass.png"); /* Example: soft green grass */
+}
+
+.tile.door {
+  background-image: url("./textures/door_01.png"); /* Wooden or metallic door */
+}
+
+.tile.water {
+  background-image: url("./textures/water.png"); /* Animated water */
+}
+
+.tile.ice {
+  background-image: url("./textures/ice.png"); /* Slippery tile logic possible */
+}
+
+.tile.sand {
+  background-image: url("./textures/sand.png");
+}
+
+/* Optional fallback for unknown tiles */
+.tile.unknown {
+  background-color: magenta;
+}
+
+
+
+
+
+
+/* .tile {
   width: var(--grid-cell);
   height: var(--grid-cell);
   position: absolute;
@@ -269,7 +264,7 @@ body {
 
 .tile.lava {
   background-color: #bd2121
-}
+} */
 
 .character {
   width: var(--grid-cell);
