@@ -140,6 +140,34 @@ body {
 
 
 
+.object-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none; /* allows character to walk through unless interactable handling is later added */
+}
+
+.object {
+  position: absolute;
+  width: calc(var(--pixel-size) * 8);  /* 16px tile / 2 = 8px */
+  height: calc(var(--pixel-size) * 8);
+  opacity: 0.9;
+  border-radius: 2px;
+}
+
+/* Test visual styles */
+.object.table {
+  background-color: saddlebrown;
+}
+
+.object.chest {
+  background-color: crimson;
+}
+
+.object.signpost {
+  background-color: dodgerblue;
+}
+
 
 
 
