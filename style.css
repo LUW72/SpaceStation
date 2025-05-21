@@ -1,4 +1,5 @@
-/* === Root Variables and Media Queries === */
+
+
 :root {
   --pixel-size: 2px;
   --grid-cell: calc(var(--pixel-size) * 16);
@@ -48,7 +49,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #61ddf7;
+  background: #0d0d0d;
   position: relative;
 }
 
@@ -63,21 +64,85 @@ body {
   height: calc(10 * var(--grid-cell));
 }
 
-.tile {
-  width: var(--grid-cell);
-  height: var(--grid-cell);
-  position: absolute;
+
+.map {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
 }
+
+.tile {
+  position: absolute;
+  width: calc(var(--pixel-size) * 16);
+  height: calc(var(--pixel-size) * 16);
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* === TILE TYPES === */
 
 .tile.floor {
-  background-color: #c7f0ff;
+  background-image: url("./textures/floor_01.png"); /* Example: light stone */
 }
+
+.tile.floor_cracked {
+  background-image: url("./textures/floor_01_1.png"); 
+}
+
+.tile.wall_corner_SE {
+  background-image: url("./textures/wall_corner_SouthEast.png"); 
+}
+
 
 .tile.wall {
-  background-color: #333;
+  background-image: url("./textures/wall_right.png"); /* Example: dark brick wall */
 }
 
+.tile.wall_top {
+  background-image: url("./textures/wall_top.png"); /* Animated lava if desired */
+}
+
+.tile.wall_top_2 {
+  background-image: url("./textures/wall_top_2.png"); /* Animated lava if desired */
+}
+
+
+.tile.grass {
+  background-image: url("./textures/grass.png"); /* Example: soft green grass */
+}
+
+.tile.door {
+  background-image: url("./textures/door_01.png"); /* Wooden or metallic door */
+}
+
+.tile.water {
+  background-image: url("./textures/water.png"); /* Animated water */
+}
+
+.tile.ice {
+  background-image: url("./textures/ice.png"); /* Slippery tile logic possible */
+}
+
+.tile.sand {
+  background-image: url("./textures/sand.png");
+}
+
+/* Optional fallback for unknown tiles */
+.tile.unknown {
+  background-color: magenta;
+}
+
+
+
+
+
+
+
+
 /* === Character === */
+
 .character {
   width: var(--grid-cell);
   height: var(--grid-cell);

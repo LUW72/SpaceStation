@@ -1,6 +1,7 @@
-// Character.js
-export class Character {
-  constructor(mapElement, characterElement, levelMap) {
+export class Character 
+{
+  constructor(mapElement, characterElement, levelMap) 
+  {
     this.map = mapElement;
     this.character = characterElement;
     this.levelMap = levelMap;
