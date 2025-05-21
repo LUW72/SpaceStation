@@ -1,4 +1,5 @@
 import { Character } from "./Character.js";
+import { GameObject } from "./GameObject.js"; // assuming separate file
 
 const TILE_TYPES = {
   0: { name: 'floor'},
@@ -12,6 +13,7 @@ const TILE_TYPES = {
   8: { name: 'wall_corner_NW'},   
   9: { name: 'wall_corner_SW'},   
   10: { name: 'wall_top_2'},   
+  11: { name: 'sign'},   
 
   
 };
@@ -22,7 +24,7 @@ export class GameArea {
     this.characterElement = document.querySelector(".character");
     this.mapElement = document.querySelector(".map");
     this.levelMap = [
-      [1, 10, 10, 10, 10, 10, 4, 10, 10, 10, 10, 10, 7],
+      [1, 10, 10, 10, 10, 10, 4, 10, 10, 11, 10, 10, 7],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
@@ -35,6 +37,48 @@ export class GameArea {
       [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
       [9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8],
     ];
+
+    this.objectMatrix = [
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,3],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 3,0],
+  
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0],
+  [0,1, 0,0, 0,0, 0,1, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 1,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,2, 0,0, 0,0, 0,0, 0,0, 0,0, 0,1, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 2,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 3,0, 0,0, 0,0, 0,0, 3,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 4,0, 0,0, 0,0, 0,0, 4,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+  [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+];
+
   
     this.init();
   }
@@ -44,33 +88,35 @@ export class GameArea {
     this.setMapSize();
     this.renderTiles();
     this.character = new Character(this.mapElement, this.characterElement, this.levelMap);
+    this.gameObjects = new GameObject(this.mapElement, this.objectMatrix);
     this.loop();
   }
 
-  renderTiles() {
-    this.mapElement.innerHTML = "";
+    renderTiles() 
+    {
+        this.mapElement.innerHTML = "";
 
-    const pixelSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--pixel-size"));
-    const tileSize = pixelSize * 16;
+        const pixelSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--pixel-size"));
+        const tileSize = pixelSize * 16;
 
-    for (let row = 0; row < this.levelMap.length; row++) {
-      for (let col = 0; col < this.levelMap[row].length; col++) {
-        const tileType = this.levelMap[row][col];
-        const tileInfo = TILE_TYPES[tileType] || { name: 'unknown' };
+        for (let row = 0; row < this.levelMap.length; row++) {
+        for (let col = 0; col < this.levelMap[row].length; col++) {
+            const tileType = this.levelMap[row][col];
+            const tileInfo = TILE_TYPES[tileType] || { name: 'unknown' };
 
-        const tile = document.createElement("div");
-        tile.classList.add("tile", tileInfo.name);
+            const tile = document.createElement("div");
+            tile.classList.add("tile", tileInfo.name);
 
-        tile.dataset.tileType = tileInfo.name;
+            tile.dataset.tileType = tileInfo.name;
 
-        tile.style.left = `${col * tileSize}px`;
-        tile.style.top = `${row * tileSize}px`;
-        this.mapElement.appendChild(tile);
-      }
+            tile.style.left = `${col * tileSize}px`;
+            tile.style.top = `${row * tileSize}px`;
+            this.mapElement.appendChild(tile);
+        }
+        }
+
+        this.mapElement.appendChild(this.characterElement);
     }
-
-    this.mapElement.appendChild(this.characterElement);
-  }
 
     setMapSize() 
     {
