@@ -10,6 +10,7 @@ export class Character
     this.held_directions = [];
     this.moveCooldown = 150; // in ms, adjust to make movement slower/faster
     this.lastMoveTime = 0;
+    this.checkInteraction;
 
 
     this.directions = {
@@ -35,6 +36,9 @@ export class Character
       if (dir && this.held_directions.indexOf(dir) === -1) {
         this.held_directions.unshift(dir);
       }
+        if (e.code === "Space") {
+            this.checkInteraction();
+        }
     });
 
     document.addEventListener("keyup", (e) => {
@@ -61,13 +65,13 @@ export class Character
   if (held === "up") newY--;
 
   if (held) {
-    this.character.setAttribute("facing", held); // ✅ Always set direction
+    this.character.setAttribute("facing", held);
   }
 
   if (this.levelMap[newY] && this.levelMap[newY][newX] === 0) {
     this.tileX = newX;
     this.tileY = newY;
-    this.lastMoveTime = now; // ✅ Only move if walkable
+    this.lastMoveTime = now; 
   }
 
   this.character.setAttribute("walking", held ? "true" : "false");
@@ -80,5 +84,28 @@ export class Character
   this.map.style.transform = `translate3d(${-x + camera_left}px, ${-y + camera_top}px, 0)`;
   this.character.style.transform = `translate3d(${x}px, ${y}px, 0)`;
 }
+
+checkInteraction() {
+  let offsetX = 0;
+  let offsetY = 0;
+
+  const facing = this.character.getAttribute("facing");
+
+  if (facing === "up") offsetY = -1;
+  if (facing === "down") offsetY = 1;
+  if (facing === "left") offsetX = -1;
+  if (facing === "right") offsetX = 1;
+
+  const targetX = this.tileX + offsetX;
+  const targetY = this.tileY + offsetY;
+
+  const tileValue = this.levelMap?.[targetY]?.[targetX];
+
+  if (tileValue === 4) {
+    // Show interaction, dialog, item pickup, etc.
+    alert("You interacted with the object!");
+  }
+}
+
 
 }
