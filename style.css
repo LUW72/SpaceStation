@@ -252,16 +252,23 @@ body {
   image-rendering: pixelated;
 }
 
+
+
 .tile {
   width: var(--grid-cell);
   height: var(--grid-cell);
   position: absolute;
 }
+
 .tile.floor {
   background-color: #c7f0ff;
 }
 .tile.wall {
   background-color: #333;
+}
+
+.tile.lava {
+  background-color: #bd2121
 }
 
 .character {
