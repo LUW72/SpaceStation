@@ -1,5 +1,6 @@
 import { InteractionDisplay } from './InteractionDisplay.js';
 import { OBJECT_TYPES } from './GameObject.js';
+import { PopupManager } from './PopupManager.js';
 
 export class Character {
   constructor(mapElement, characterElement, levelMap) {
@@ -14,6 +15,10 @@ export class Character {
     this.lastMoveTime = 0;
     this.gameArea = null;
     this.interactionDisplay = new InteractionDisplay();
+    this.popupManager = new PopupManager();
+
+    // Initialize popup elements after DOM is loaded
+    this.initPopupElements();
 
     this.directions = {
       up: "up",
@@ -30,6 +35,49 @@ export class Character {
     };
 
     this.initControls();
+
+    // Add popup event listeners
+    document.addEventListener('popup-opened', () => {
+      this.canMove = false;
+    });
+    
+    document.addEventListener('popup-closed', () => {
+      this.canMove = true;
+    });
+  }
+
+  initPopupElements() {
+    // Get popup elements
+    this.signpostPopup = document.querySelector('.signpost-popup');
+    this.popupText = document.querySelector('.popup-text');
+    this.closePopupButton = document.querySelector('.close-popup');
+
+    // Create elements if they don't exist
+    if (!this.signpostPopup) {
+      this.signpostPopup = document.createElement('div');
+      this.signpostPopup.className = 'signpost-popup';
+      this.signpostPopup.style.display = 'none';
+
+      const popupContent = document.createElement('div');
+      popupContent.className = 'popup-content';
+
+      this.popupText = document.createElement('p');
+      this.popupText.className = 'popup-text';
+
+      this.closePopupButton = document.createElement('button');
+      this.closePopupButton.className = 'close-popup';
+      this.closePopupButton.textContent = 'Close';
+
+      popupContent.appendChild(this.popupText);
+      popupContent.appendChild(this.closePopupButton);
+      this.signpostPopup.appendChild(popupContent);
+      document.body.appendChild(this.signpostPopup);
+    }
+
+    // Add close button event listener
+    this.closePopupButton.addEventListener('click', () => {
+      this.signpostPopup.style.display = 'none';
+    });
   }
 
   setGameArea(gameArea) {
@@ -240,7 +288,6 @@ export class Character {
     const targetX = Math.floor(this.tileX + offsetX);
     const targetY = Math.floor(this.tileY + offsetY);
 
-    
     // Convert map coordinates to object matrix coordinates (2x2 mapping)
     const objX = targetX * 2;
     const objY = targetY * 2;
@@ -253,7 +300,16 @@ export class Character {
                 const objectInfo = OBJECT_TYPES[objectId];
                 console.log('Interacting with:', objectInfo.display_name);
                 
-                // Handle special interactions
+                // Handle signpost interactions
+                if (objectInfo.name === 'signpost'){
+                    if (this.signpostPopup && this.popupText) {
+                        this.popupText.textContent = objectInfo.text;
+                        this.signpostPopup.style.display = 'flex';
+                    }
+                    return;
+                }
+                
+                // Handle door interactions
                 if (objectInfo.name === 'door') {
                     this.gameArea.handleDoorInteraction(targetX, targetY);
                     return;
@@ -267,6 +323,18 @@ export class Character {
   setPosition(x, y) {
     this.tileX = x;
     this.tileY = y;
+  }
+
+  handleInteraction() {
+    const objectInfo = this.getCurrentObject();
+    if (objectInfo && objectInfo.interactable) {
+      if (objectInfo.name === "signpost" && objectInfo.text) {
+        this.popupManager.showPopup(objectInfo.text);
+      } else if (objectInfo.name === "door") {
+        this.gameArea.handleDoorInteraction(this.tileX, this.tileY);
+      }
+      // Handle other interactable objects...
+    }
   }
 }
 

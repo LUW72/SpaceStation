@@ -27,12 +27,21 @@ const TILE_TYPES = {
   99: { name: 'empty'},
 };
 
+
+
 export class GameArea 
 {
   constructor() 
   {
     this.characterElement = document.querySelector(".character");
     this.mapElement = document.querySelector(".map");
+    this.roomHeader = document.querySelector(".room-header");
+
+    this.roomNames = {
+      'main': 'Main Hall',
+      'storage': 'Storage Room',
+      'lab': 'Laboratory'
+    };
 
     this.currentRoom = 'main';
     this.rooms = {
@@ -54,11 +63,11 @@ export class GameArea
           [ 99, 99, 99, 99, 99, 99,  1,  4, 12, 99, 99, 99, 99, 99], // 15
         ],
         objects: [
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 10,10, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0], // 01
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 10,10, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 11,11, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 11,11, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
 
-          [0,0, 5,0, 0,0, 0,5, 0,0, 0,0, 0,0, 0,0, 0,0, 0,5, 0,0, 0,0, 0,0, 0,0 ], // 02
-          [0,0, 0,0, 0,0, 0,5, 0,0, 0,10, 0,0, 0,0, 0,4, 0,0, 0,0, 0,0, 0,0, 0,0],
+          [0,0, 5,0, 0,0, 0,5, 0,0, 0,0, 0,0, 0,0, 0,0, 0,5, 0,0, 0,0, 0,3, 0,0 ],
+          [0,0, 0,0, 0,0, 0,5, 0,0, 0,10, 0,0, 0,0, 0,20, 0,0, 0,0, 0,0, 3,0, 0,0],
           
           [0,0, 0,0, 1,1, 0,0, 6,0, 0,0, 1,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0, 0,0], // 03
           [0,0, 0,0, 0,1, 0,1, 6,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
@@ -72,7 +81,10 @@ export class GameArea
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 2,0, 0,0], // 06
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
     
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 1,0, 0,0, 0,0, 1,0, 0,0, 0,0, 0,0, 0,0], // 07
+          [0,0, 0,0, 0,0, 0,0, 0,0, 3,0, 0,0, 0,0, 0,0, 3,0, 0,0, 0,0, 0,0, 12,12],
+          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 12,12],
+    
+          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
     
           [0,0, 0,0, 0,0, 8,99, 0,0, 0,0, 0,0, 0,0, 0,0, 3,0, 0,0, 0,0, 0,0, 10,10], // 08
@@ -81,10 +93,7 @@ export class GameArea
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0], // 09
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
     
-          [0,0, 0,0, 0,0, 0,0, 0,7, 0,11, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0], // 10
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 11,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
-    
-          [0,0, 0,0, 0,0, 0,0, 0,0, 4,0, 0,0, 0,0, 0,0, 4,0, 0,0, 0,0, 0,0, 0,0], // 11
+          [0,0, 0,0, 0,0, 0,0, 0,0, 22,0, 0,0, 0,0, 0,0, 21,0, 0,0, 0,0, 0,0, 0,0],
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
     
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0], // 12
@@ -133,9 +142,6 @@ export class GameArea
 
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,1, 0,0, 0,0],
-
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
 
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
@@ -198,9 +204,15 @@ export class GameArea
     this.gameObjects = new GameObject(this.mapElement, this.objectMatrix);
     this.character = new Character(this.mapElement, this.characterElement, this.levelMap);
     this.character.setGameArea(this);
+    this.updateRoomHeader();
     this.loop();
   }
 
+  updateRoomHeader() {
+    if (this.roomHeader && this.roomNames[this.currentRoom]) {
+      this.roomHeader.textContent = this.roomNames[this.currentRoom];
+    }
+  }
 
   handleDoorInteraction(x, y) 
   {
@@ -222,25 +234,27 @@ export class GameArea
   }
 
   switchRoom(roomName, targetX, targetY) {
-    this.currentRoom = roomName;
-    this.levelMap = this.rooms[roomName].map;
-    this.objectMatrix = this.rooms[roomName].objects;
-    
-    this.character.setPosition(targetX, targetY);
-    console.log(this.character.tileX, this.character.tileY);
+    if (this.rooms[roomName]) {
+      this.currentRoom = roomName;
+      this.levelMap = this.rooms[roomName].map;
+      this.objectMatrix = this.rooms[roomName].objects;
+      
+      this.setMapSize();
+      this.renderTiles();
+      
+      if (this.gameObjects) {
+        this.gameObjects.destroy();
+      }
+      
+      this.gameObjects = new GameObject(this.mapElement, this.objectMatrix);
+      this.character.levelMap = this.levelMap;
+      
+      if (targetX !== undefined && targetY !== undefined) {
+        this.character.setPosition(targetX, targetY);
+      }
 
-
-    
-    this.setMapSize();
-    this.renderTiles();
-    
-    if (this.gameObjects) {
-      this.gameObjects.destroy();
+      this.updateRoomHeader();
     }
-    
-    this.gameObjects = new GameObject(this.mapElement, this.objectMatrix);
-    
-    this.character.levelMap = this.levelMap;
   }
 
   renderTiles() 
