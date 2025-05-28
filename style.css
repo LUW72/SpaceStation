@@ -164,6 +164,18 @@ body {
   background-image: url("./textures/wall_top_2.png"); 
 }
 
+.tile.wall_cables {
+  background-image: url("./textures/wall_cables.png"); 
+}
+
+.tile.wall_rack {
+  background-image: url("./textures/wall_rack.png"); 
+}
+
+.tile.wall_fan {
+  background-image: url("./textures/wall_fan.png"); 
+}
+
 .tile.grass {
   background-image: url("./textures/grass.png"); 
 }
@@ -291,7 +303,7 @@ body {
 
 .character_spritesheet {
   position: fixed;
-  background: url("textures/sprite_fixed.png") no-repeat;
+  background: url("textures/character.png") no-repeat;
   background-size: 100%;
   width: calc(var(--grid-cell) * 2);
   height: calc(var(--grid-cell) * 2); 
