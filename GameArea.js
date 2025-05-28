@@ -1,5 +1,6 @@
 import { Character } from "./Character.js";
 import { GameObject } from "./GameObject.js"; // assuming separate file
+import { ItemBar } from "./ItemBar.js";
 
 const TILE_TYPES = {
   0: { name: 'floor'},
@@ -89,6 +90,13 @@ export class GameArea {
     this.renderTiles();
     this.character = new Character(this.mapElement, this.characterElement, this.levelMap);
     this.gameObjects = new GameObject(this.mapElement, this.objectMatrix);
+    this.itemBar = new ItemBar();
+    
+    // Add some test items
+    this.itemBar.addItem('key');
+    this.itemBar.addItem('health');
+    this.itemBar.addItem('weapon');
+    
     this.loop();
   }
 
