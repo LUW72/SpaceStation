@@ -265,7 +265,7 @@ body {
   background-position: center;
   background-size: 100% 100%;
   background-color: #07c2cc;
-  transform: translateY(-40px);
+  transform: translateY(-20px);
 }
 
 .object.table {
@@ -305,6 +305,10 @@ body {
  /* Offset the transform to maintain original position */
 }
 
+
+.object.door {
+  background-color: #99d00c;
+}
 
 
 
