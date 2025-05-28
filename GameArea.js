@@ -212,23 +212,18 @@ export class GameArea
     this.lastPosition = { x: this.character.tileX, y: this.character.tileY };
     
     if (this.currentRoom === 'main') {
-
-      if (y === 0) 
-      {
-        this.switchRoom('storage', 5, 1);
+      if (y === 0) {
+        this.switchRoom('storage', 5.5, 1.5);
       }
-      else if (x === this.levelMap[0].length - 1) 
-      {
-        this.switchRoom('lab', 1, 5);
+      else if (x === this.levelMap[0].length - 1) {
+        this.switchRoom('lab', 1.5, 5);
       }
     } 
-    else if (this.currentRoom === 'storage') 
-    {
-      this.switchRoom('main', this.lastPosition.x + 1, this.lastPosition.y);
+    else if (this.currentRoom === 'storage') {
+      this.switchRoom('main', 6.5, 1.5);
     }
-    else if (this.currentRoom === 'lab') 
-    {
-      this.switchRoom('main', this.lastPosition.x + 11, this.lastPosition.y + 2);
+    else if (this.currentRoom === 'lab') {
+      this.switchRoom('main', this.lastPosition.x + 11, this.lastPosition.y + 2.5);
     }
   }
 
@@ -238,6 +233,9 @@ export class GameArea
     this.objectMatrix = this.rooms[roomName].objects;
     
     this.character.setPosition(targetX, targetY);
+    console.log(this.character.tileX, this.character.tileY);
+
+
     
     this.setMapSize();
     this.renderTiles();

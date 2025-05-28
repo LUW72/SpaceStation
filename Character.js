@@ -40,8 +40,8 @@ export class Character {
       if (e.code === "Space") {
         this.checkInteraction();
       }
-      if (e.code === "Space") {
-        this.checkInteraction();
+      if (e.code === "Enter") {
+        console.log(`Character position: X=${this.tileX.toFixed(2)}, Y=${this.tileY.toFixed(2)}`);
       }
     });
 
@@ -102,8 +102,8 @@ export class Character {
       }
       if (!isWalkable) break;
     }
-    console.log(`Trying to move to: (${newX}, ${newY})`);
-    console.log({ leftTile, rightTile, topTile, bottomTile });
+    /* console.log(`Trying to move to: (${newX}, ${newY})`);
+    console.log({ leftTile, rightTile, topTile, bottomTile }); */
     
     
 
@@ -140,11 +140,15 @@ checkInteraction() {
     const targetX = Math.floor(this.tileX + offsetX);
     const targetY = Math.floor(this.tileY + offsetY);
 
-    const tileValue = this.levelMap?.[targetY]?.[targetX];
 
-    if (tileValue === 4) {
-      alert("You interacted with the object!");
+    if (this.levelMap[targetY] && this.levelMap[targetY][targetX] === 4 && this.gameArea) {
+      this.gameArea.handleDoorInteraction(targetX, targetY);
     }
+  }
+
+  setPosition(x, y) {
+    this.tileX = x;
+    this.tileY = y;
   }
 }
 
