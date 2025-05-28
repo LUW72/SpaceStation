@@ -96,6 +96,7 @@ export class Character {
 
     let isWalkable = true;
     
+    // Check tile map collisions
     for (let y = topTile; y <= bottomTile; y++) {
       for (let x = leftTile; x <= rightTile; x++) {
         const tile = this.levelMap?.[y]?.[x];
@@ -105,6 +106,32 @@ export class Character {
         }
       }
       if (!isWalkable) break;
+    }
+
+    // Check object collisions if tile is walkable
+    if (isWalkable && this.gameArea) {
+      const objMatrix = this.gameArea.rooms[this.gameArea.currentRoom].objects;
+      
+      // Convert map coordinates to object matrix coordinates (2x2 mapping)
+      const objLeft = Math.floor(left * 2);
+      const objRight = Math.ceil(right * 2) - 1;
+      const objTop = Math.floor(top * 2);
+      const objBottom = Math.ceil(bottom * 2) - 1;
+
+      // Check for solid objects
+      for (let y = objTop; y <= objBottom; y++) {
+        for (let x = objLeft; x <= objRight; x++) {
+          const objectId = objMatrix?.[y]?.[x];
+          if (objectId && objectId > 0) {
+            const objectInfo = OBJECT_TYPES[objectId];
+            if (objectInfo && objectInfo.solid) {
+              isWalkable = false;
+              break;
+            }
+          }
+        }
+        if (!isWalkable) break;
+      }
     }
 
     if (isWalkable) {
@@ -151,6 +178,7 @@ export class Character {
                     objectInfo.interactable,
                     objectInfo.description
                 );
+                
                 return; // Exit after finding the first object
             }
         }
