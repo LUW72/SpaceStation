@@ -1,14 +1,19 @@
+import { InteractionDisplay } from './InteractionDisplay.js';
+import { OBJECT_TYPES } from './GameObject.js';
+
 export class Character {
   constructor(mapElement, characterElement, levelMap) {
     this.map = mapElement;
     this.character = characterElement;
     this.levelMap = levelMap;
+    this.objectMatrix = null; // Will be set from GameArea
     this.tileX = 2.0;
     this.tileY = 2.0;
     this.held_directions = [];
     this.moveCooldown = 100;
     this.lastMoveTime = 0;
-    this.gameArea = null; // Will be set by GameArea
+    this.gameArea = null;
+    this.interactionDisplay = new InteractionDisplay();
 
     this.directions = {
       up: "up",
@@ -51,14 +56,15 @@ export class Character {
       if (index > -1) this.held_directions.splice(index, 1);
     });
   }
+
   updatePosition() {
     const now = Date.now();
     if (now - this.lastMoveTime < this.moveCooldown) return;
 
-      const pixelSize = parseInt(
+    const pixelSize = parseInt(
       getComputedStyle(document.documentElement).getPropertyValue("--pixel-size")
     );
-      const tileSize = pixelSize * 16;
+    const tileSize = pixelSize * 16;
 
     const held = this.held_directions[0];
     let newX = this.tileX;
@@ -71,14 +77,13 @@ export class Character {
     if (held === "down") newY += step;
     if (held === "up") newY -= step;
 
-  if (held) {
-    this.character.setAttribute("facing", held);
-  }
+    if (held) {
+      this.character.setAttribute("facing", held);
+    }
 
     // Check tile you're moving into
-    const halfSize = 0.125; // Quarter of original size
+    const halfSize = 0.125;
     
-    // Adjust position to account for the smaller character size
     const left   = (newX - halfSize);
     const right  = (newX + halfSize);
     const top    = (newY - halfSize);
@@ -89,7 +94,6 @@ export class Character {
     const topTile    = Math.floor(top);
     const bottomTile = Math.ceil(bottom) - 1;
 
-    
     let isWalkable = true;
     
     for (let y = topTile; y <= bottomTile; y++) {
@@ -102,33 +106,101 @@ export class Character {
       }
       if (!isWalkable) break;
     }
-    /* console.log(`Trying to move to: (${newX}, ${newY})`);
-    console.log({ leftTile, rightTile, topTile, bottomTile }); */
-    
-    
 
+    if (isWalkable) {
+      this.tileX = newX;
+      this.tileY = newY;
+      this.lastMoveTime = now;
+    }
 
-if (isWalkable) {
-  this.tileX = newX;
-  this.tileY = newY;
-  this.lastMoveTime = now;
-}
+    this.character.setAttribute("walking", held ? "true" : "false");
 
-
-  this.character.setAttribute("walking", held ? "true" : "false");
-
-    const x = (this.tileX * tileSize) - (tileSize * 0.25); // Adjust for smaller size
-    const y = (this.tileY * tileSize) - (tileSize * 0.25); // Adjust for smaller size
+    const x = (this.tileX * tileSize) - (tileSize * 0.25);
+    const y = (this.tileY * tileSize) - (tileSize * 0.25);
     const camera_left = pixelSize * 75;
     const camera_top = pixelSize * 70;
 
     this.map.style.transform = `translate3d(${-x + camera_left}px, ${-y + camera_top}px, 0)`;
     this.character.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+
+    // Check what's in front of the character
+    this.checkFrontTile();
   }
 
-checkInteraction() {
-  let offsetX = 0;
-  let offsetY = 0;
+  checkFrontTile() {
+    if (!this.gameArea) return;
+
+    // First check the current tile the character is standing on
+    const currentX = Math.floor(this.tileX);
+    const currentY = Math.floor(this.tileY);
+    
+    // Convert current position to object matrix coordinates (2x2 mapping)
+    const currentObjX = currentX * 2;
+    const currentObjY = currentY * 2;
+
+    // Check the current tile first
+    for (let dy = 0; dy < 2; dy++) {
+        for (let dx = 0; dx < 2; dx++) {
+            const objectId = this.gameArea.rooms[this.gameArea.currentRoom].objects[currentObjY + dy][currentObjX + dx];
+            if (objectId && objectId > 0 && OBJECT_TYPES[objectId]) {
+                const objectInfo = OBJECT_TYPES[objectId];
+                this.interactionDisplay.showInteraction(
+                    objectInfo.name,
+                    objectInfo.texture,
+                    objectInfo.display_name,
+                    objectInfo.interactable,
+                    objectInfo.description
+                );
+                return; // Exit after finding the first object
+            }
+        }
+    }
+
+    // If nothing found on current tile, check the tile in front
+    let offsetX = 0;
+    let offsetY = 0;
+
+    const facing = this.character.getAttribute("facing");
+
+    if (facing === "up") offsetY = -1;
+    if (facing === "down") offsetY = 1;
+    if (facing === "left") offsetX = -1;
+    if (facing === "right") offsetX = 1;
+
+    const targetX = Math.floor(this.tileX + offsetX);
+    const targetY = Math.floor(this.tileY + offsetY);
+    
+    // Convert map coordinates to object matrix coordinates (2x2 mapping)
+    const objX = targetX * 2;
+    const objY = targetY * 2;
+
+    // Check all four object positions that correspond to this tile
+    for (let dy = 0; dy < 2; dy++) {
+        for (let dx = 0; dx < 2; dx++) {
+            const objectId = this.gameArea.rooms[this.gameArea.currentRoom].objects[objY + dy][objX + dx];
+            if (objectId && objectId > 0 && OBJECT_TYPES[objectId]) {
+                const objectInfo = OBJECT_TYPES[objectId];
+                this.interactionDisplay.showInteraction(
+                    objectInfo.name,
+                    objectInfo.texture,
+                    objectInfo.display_name,
+                    objectInfo.interactable,
+                    objectInfo.description
+                );
+                return; // Exit after finding the first object
+            }
+        }
+    }
+
+    // If no objects found in either position, clear the display
+    this.interactionDisplay.clear();
+  }
+
+  checkInteraction() {
+    if (!this.gameArea) return;
+
+    let offsetX = 0;
+    let offsetY = 0;
 
     const facing = this.character.getAttribute("facing");
 
@@ -140,9 +212,27 @@ checkInteraction() {
     const targetX = Math.floor(this.tileX + offsetX);
     const targetY = Math.floor(this.tileY + offsetY);
 
+    
+    // Convert map coordinates to object matrix coordinates (2x2 mapping)
+    const objX = targetX * 2;
+    const objY = targetY * 2;
 
-    if (this.levelMap[targetY] && this.levelMap[targetY][targetX] === 4 && this.gameArea) {
-      this.gameArea.handleDoorInteraction(targetX, targetY);
+    // Check all four object positions that correspond to this tile
+    for (let dy = 0; dy < 2; dy++) {
+        for (let dx = 0; dx < 2; dx++) {
+            const objectId = this.gameArea.rooms[this.gameArea.currentRoom].objects[objY + dy][objX + dx];
+            if (objectId && objectId > 0 && OBJECT_TYPES[objectId]) {
+                const objectInfo = OBJECT_TYPES[objectId];
+                console.log('Interacting with:', objectInfo.display_name);
+                
+                // Handle special interactions
+                if (objectInfo.name === 'door') {
+                    this.gameArea.handleDoorInteraction(targetX, targetY);
+                    return;
+                }
+                // Add other special interactions here as needed
+            }
+        }
     }
   }
 
