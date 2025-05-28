@@ -8,6 +8,7 @@ export class Character {
     this.held_directions = [];
     this.moveCooldown = 100;
     this.lastMoveTime = 0;
+    this.gameArea = null; // Will be set by GameArea
 
     this.directions = {
       up: "up",
@@ -26,11 +27,18 @@ export class Character {
     this.initControls();
   }
 
+  setGameArea(gameArea) {
+    this.gameArea = gameArea;
+  }
+
   initControls() {
     document.addEventListener("keydown", (e) => {
       const dir = this.keys[e.which];
       if (dir && this.held_directions.indexOf(dir) === -1) {
         this.held_directions.unshift(dir);
+      }
+      if (e.code === "Space") {
+        this.checkInteraction();
       }
       if (e.code === "Space") {
         this.checkInteraction();
@@ -43,15 +51,14 @@ export class Character {
       if (index > -1) this.held_directions.splice(index, 1);
     });
   }
-
   updatePosition() {
     const now = Date.now();
     if (now - this.lastMoveTime < this.moveCooldown) return;
 
-    const pixelSize = parseInt(
+      const pixelSize = parseInt(
       getComputedStyle(document.documentElement).getPropertyValue("--pixel-size")
     );
-    const tileSize = pixelSize * 16;
+      const tileSize = pixelSize * 16;
 
     const held = this.held_directions[0];
     let newX = this.tileX;
@@ -64,9 +71,9 @@ export class Character {
     if (held === "down") newY += step;
     if (held === "up") newY -= step;
 
-    if (held) {
-      this.character.setAttribute("facing", held);
-    }
+  if (held) {
+    this.character.setAttribute("facing", held);
+  }
 
     // Check tile you're moving into
     const halfSize = 0.125; // Quarter of original size
@@ -108,7 +115,7 @@ if (isWalkable) {
 }
 
 
-    this.character.setAttribute("walking", held ? "true" : "false");
+  this.character.setAttribute("walking", held ? "true" : "false");
 
     const x = (this.tileX * tileSize) - (tileSize * 0.25); // Adjust for smaller size
     const y = (this.tileY * tileSize) - (tileSize * 0.25); // Adjust for smaller size
@@ -119,9 +126,9 @@ if (isWalkable) {
     this.character.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   }
 
-  checkInteraction() {
-    let offsetX = 0;
-    let offsetY = 0;
+checkInteraction() {
+  let offsetX = 0;
+  let offsetY = 0;
 
     const facing = this.character.getAttribute("facing");
 
@@ -140,3 +147,5 @@ if (isWalkable) {
     }
   }
 }
+
+

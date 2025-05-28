@@ -1,7 +1,7 @@
 :root {
   --pixel-size: 2px;
   --grid-cell: calc(var(--pixel-size) * 16);
-  --bg: #000000;
+  --bg: #1a1a1a;
 }
 
 @media (min-width: 700px) {
@@ -54,7 +54,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0d0d0d;
+  background: var(--bg);
   position: relative;
 }
 
@@ -73,7 +73,8 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: #000;
+  background: var(--bg);
+  z-index: auto;
 }
 
 .tile {
@@ -88,63 +89,107 @@ body {
 /* === TILE TYPES === */
 
 .tile.floor {
-  background-image: url("./textures/floor_01.png"); /* Example: light stone */
+  background-image: url("./textures/floor_01.png"); 
 }
 
-.tile.floor_cracked {
-  background-image: url("./textures/floor_01_1.png"); 
+.tile.wall_corner_a {
+  background-image: url("./textures/wall_corner.png"); 
+  transform: rotate(0);
 }
 
-.tile.wall_corner_SE {
-  background-image: url("./textures/wall_corner_SouthEast.png"); 
+.tile.wall_corner_b {
+  background-image: url("./textures/wall_corner.png"); 
+  transform: rotate(90deg);
+}
+
+.tile.wall_corner_c {
+  background-image: url("./textures/wall_corner.png"); 
+  transform: rotate(-90deg);
+}
+
+.tile.wall_corner_d {
+  background-image: url("./textures/wall_corner.png"); 
+  transform: rotate(180deg);
+}
+
+.tile.wall_corner_90_a {
+  background-image: url("./textures/wall_corner_full.png"); 
+}
+
+.tile.wall_corner_90_b {
+  background-image: url("./textures/wall_corner_full.png");
+  transform: scaleX(-1); 
+}
+
+.tile.wall_corner_90_b_2 {
+  background-image: url("./textures/wall_corner_full.png"); 
+  transform: rotate(-90deg);  
+}
+
+.tile.wall_corner_90_c {
+  background-image: url("./textures/wall_corner_full.png"); 
+  transform: rotate(180deg);
+}
+
+.tile.wall_corner_90_d {
+  background-image: url("./textures/wall_corner_full.png"); 
+  transform: rotate(90deg);
 }
 
 .tile.wall {
-  background-image: url("./textures/wall_right.png"); /* Example: dark brick wall */
-}
-
-.tile.sign {
-  background-color: aquamarine;
+  background-image: url("./textures/wall_2.png");
+  transform: rotate(270deg);
 }
 
 .tile.wall_top {
-  background-image: url("./textures/wall_top.png"); /* Animated lava if desired */
+  background-image: url("./textures/wall_2.png");
+}
+
+.tile.wall_bottom {
+  background-image: url("./textures/wall_2.png");
+  transform: rotate(180deg);
+}
+
+.tile.wall_right_side {
+  background-image: url("./textures/wall_2.png");
+  transform: rotate(90deg);
+}
+
+
+.tile.wall.top {
+  background-image: url("./textures/wall_top.png"); 
 }
 
 .tile.wall_top_2 {
-  background-image: url("./textures/wall_top_2.png"); /* Animated lava if desired */
+  background-image: url("./textures/wall_top_2.png"); 
 }
 
 .tile.grass {
-  background-image: url("./textures/grass.png"); /* Example: soft green grass */
+  background-image: url("./textures/grass.png"); 
 }
 
 .tile.door {
-  background-image: url("./textures/door_01.png"); /* Wooden or metallic door */
+  background-image: url("./textures/door_01.png"); 
 }
 
-.tile.water {
-  background-image: url("./textures/water.png"); /* Animated water */
+.tile.empty {
+  background-color: var(--bg);
 }
 
-.tile.ice {
-  background-image: url("./textures/ice.png"); /* Slippery tile logic possible */
-}
-
-.tile.sand {
-  background-image: url("./textures/sand.png");
-}
 
 /* Optional fallback for unknown tiles */
 .tile.unknown {
   background-color: magenta;
 }
 
+
 .object-layer {
   position: absolute;
   top: 0;
   left: 0;
   pointer-events: none; /* allows character to walk through unless interactable handling is later added */
+  width: 100%;
+  height: 100%;
 }
 
 .object {
@@ -153,9 +198,52 @@ body {
   height: calc(var(--pixel-size) * 8);
   opacity: 0.9;
   border-radius: 2px;
+
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;  
 }
 
 /* Test visual styles */
+
+.object.floor_crack {
+  background-image: url("./textures/floor_01_crack.png");
+  z-index: 0;
+}
+
+.object.floor_drain {
+  background-image: url("./textures/floor_01_drain.png");
+  z-index: 0;  
+}
+
+.object.wall_pipe {
+  background-image: url("./textures/wall_pipe.png");
+
+  z-index: 0;  
+}
+.object.table_chair {
+  background-image: url("./textures/obj_tableChair.png");
+
+  position: absolute;
+  background-position-y: -4px;  
+  transform: scale(1.0);
+  transform-origin: center; 
+  pointer-events: none; /* Optional: so the object doesn't block input */
+
+  z-index: 30;
+}
+
+.object.vending_mach {
+  background-image: url("./textures/obj_vendingMach.png");
+
+  transform: scale(2.0);
+  transform-origin: center; 
+  pointer-events: none; /* Optional: so the object doesn't block input */
+  z-index: 12;
+  background-position-y: -10px;  
+
+}
+
 .object.table {
   background-color: saddlebrown;
 }
@@ -165,8 +253,21 @@ body {
 }
 
 .object.signpost {
-  background-color: dodgerblue;
+  background-image: url("./textures/obj_sign.png");
+  background-position-y: -3px;
 }
+
+.object.antenna {
+  background-image: url("./textures/obj_antenna.png");
+  transform-origin: center; 
+  pointer-events: none; 
+
+}
+
+
+
+
+
 
 /* === Character === */
 
@@ -175,6 +276,7 @@ body {
   height: calc(var(--grid-cell) * 0.5);
   position: absolute;
   overflow: hidden;
+  z-index: 20; /* ez szabályozza a layer elhelyezkedését */
   border: 1px red solid;
   transform: translate(calc(var(--grid-cell) * 0.25), calc(var(--grid-cell) * 0.25)); /* Add offset to center the character */
 }
@@ -218,38 +320,6 @@ body {
   to {
     transform: translate3d(-100%, 0%, 0);
   }
-}
-
-/* === Corners === */
-.corner_topleft,
-.corner_topright,
-.corner_bottomleft,
-.corner_bottomright {
-  position: absolute;
-  width: var(--pixel-size);
-  height: var(--pixel-size);
-  background: var(--bg);
-  z-index: 2;
-}
-
-.corner_topleft {
-  top: calc(var(--pixel-size) * -1);
-  left: calc(var(--pixel-size) * -1);
-}
-
-.corner_topright {
-  top: calc(var(--pixel-size) * -1);
-  right: calc(var(--pixel-size) * -1);
-}
-
-.corner_bottomleft {
-  bottom: calc(var(--pixel-size) * -1);
-  left: calc(var(--pixel-size) * -1);
-}
-
-.corner_bottomright {
-  bottom: calc(var(--pixel-size) * -1);
-  right: calc(var(--pixel-size) * -1);
 }
 
 /* /* === Item Bar Styles === */
