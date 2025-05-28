@@ -431,3 +431,60 @@ body {
   padding-top: calc(var(--pixel-size) * 2);
   margin-top: auto;
 }
+
+.signpost-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: calc(var(--pixel-size) * 8);
+  border: calc(var(--pixel-size) * 1) solid #ffffff;
+  max-width: calc(var(--pixel-size) * 120);
+  text-align: center;
+}
+
+.popup-text {
+  color: #ffffff;
+  font-family: monospace;
+  font-size: calc(var(--pixel-size) * 4);
+  margin-bottom: calc(var(--pixel-size) * 4);
+  line-height: 1.5;
+}
+
+.close-popup {
+  background: #333;
+  color: #ffffff;
+  border: calc(var(--pixel-size) * 1) solid #ffffff;
+  padding: calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 4);
+  font-family: monospace;
+  font-size: calc(var(--pixel-size) * 3);
+  cursor: pointer;
+}
+
+.close-popup:hover {
+  background: #444;
+}
+
+.room-header {
+  position: absolute;
+  top: calc(var(--pixel-size) * -10);
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+  font-family: monospace;
+  font-size: calc(var(--pixel-size) * 6);
+  font-weight: bold;
+  text-shadow: calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 1) rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}

@@ -9,9 +9,21 @@ export const OBJECT_TYPES = {
   5: { name: "wall_pipe", display_name: "Vent", interactable: false, objectId: 5, texture: "./textures/wall_pipe.png", description: "Amogus"},
   6: { name: "table_chair", display_name: "Workstation", interactable: false, objectId: 6, texture: "./textures/obj_tableChair.png", description: "WAP."},
   7: { name: "floor_drain", display_name: "Floor Drain", interactable: false, objectId: 7, texture: "./textures/floor_01_drain.png", description: "Dr.Diddy."},
-  8: { name: "vending_mach", display_name: "Vending Machine", interactable: false, objectId: 8, texture: "./textures/obj_vendingMach.png", description: "Big thirst."},
+  8: { name: "vending_mach", display_name: "Vending Machine", interactable: true, objectId: 8, texture: "./textures/obj_vendingMach.png", description: "Big thirst."},
   9: { name: "antenna", display_name: "Communication Antenna", interactable: false, objectId: 9 , texture: "./textures/obj_antenna.png", description: "Bee movie"},
-  10: { name: "door", display_name: "Door", interactable: true, objectId: 10 , texture: "./textures/door_01.png", description: "Where's the bathroom?"},
+
+
+  10: { name: "door", display_name: "Back to Main Hall", interactable: true, objectId: 10 , texture: "./textures/door_01.png", description: "I will piss myself?"},
+  11: {name: "door", display_name:"Door to Storage Room", interactable: true, objectId: 11, texture:"./textures/door_01.png", description: "Bathroom?"},
+  12: {name: "door", display_name:"Door to Lab", interactable: true, objectId: 12, texture:"./textures/door_01.png", description: "Where is the pee room?"},
+
+
+
+  20: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 4, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "You could have it all..."},
+  21: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 21, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "My empire of cheese..."},
+  22: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 22, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "I will shit my pants..."},
+  23: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 23, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "I will make you sneeeeeeze!!!"},
+
 };
 
 
