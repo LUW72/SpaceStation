@@ -2,41 +2,7 @@ export class ItemBar {
     constructor() {
         this.items = [];
         this.selectedItemIndex = -1;
-        this.createItemBar();
-    }
-
-    createItemBar() {
-        // Create the main container if it doesn't exist
-        let gameContainer = document.querySelector('.game-container');
-        if (!gameContainer) {
-            gameContainer = document.createElement('div');
-            gameContainer.className = 'game-container';
-            // Move the frame into the container
-            const frame = document.querySelector('.frame');
-            if (frame) {
-                frame.parentNode.insertBefore(gameContainer, frame);
-                gameContainer.appendChild(frame);
-            } else {
-                document.body.appendChild(gameContainer);
-            }
-        }
-        
-        // Create the item bar
-        this.container = document.createElement('div');
-        this.container.className = 'item-bar';
-        
-        // Create slots for items
-        for (let i = 0; i < 6; i++) {
-            const slot = document.createElement('div');
-            slot.className = 'item-slot';
-            slot.setAttribute('data-slot', i);
-            this.container.appendChild(slot);
-        }
-
-        // Add to game container
-        gameContainer.appendChild(this.container);
-
-        // Add number key listeners
+        this.container = document.querySelector('.item-bar');
         this.initializeKeyBindings();
     }
 
