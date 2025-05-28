@@ -14,7 +14,7 @@ export const OBJECT_TYPES = {
   10: { name: "door", display_name: "Back to Main Hall", interactable: true, objectId: 10 , texture: "./textures/door_01.png", description: "I will piss myself?", solid: false},
   11: {name: "door", display_name:"Door to Storage Room", interactable: true, objectId: 11, texture:"./textures/door_01.png", description: "Bathroom?", solid: false},
   12: {name: "door", display_name:"Door to Lab", interactable: true, objectId: 12, texture:"./textures/door_01.png", description: "Where is the pee room?", solid: false},
-
+  13: {name: "door", display_name: "Door to the Navigation Room", interactable: true, objectId: 13, texture:"./textures/door_01.png", description: "Navigating to the navigation room...", solid: false},
 
   20: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 4, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "You could have it all...", solid: true},
   21: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 21, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "My empire of cheese...", solid: true},
