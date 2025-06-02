@@ -24,6 +24,10 @@ export const OBJECT_TYPES = {
   22: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 22, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "I will shit my pants..."},
   23: { name: "signpost", display_name: "Information Sign", interactable: true, objectId: 23, texture: "./textures/obj_sign.png", description: "Craftmine. ", text: "I will make you sneeeeeeze!!!"},
 
+
+  24: { name: "test", display_name: "test", interactable: true, objectId: 24, texture: "./textures/obj_sign.png", description: "Testies.", text: "Biggus testicus!"},
+  
+
 };
 
 

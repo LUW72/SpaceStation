@@ -169,18 +169,6 @@ body {
   background-image: url("./textures/wall_top_2.png"); 
 }
 
-.tile.wall_cables {
-  background-image: url("./textures/wall_cables.png"); 
-}
-
-.tile.wall_rack {
-  background-image: url("./textures/wall_rack.png"); 
-}
-
-.tile.wall_fan {
-  background-image: url("./textures/wall_fan.png"); 
-}
-
 .tile.grass {
   background-image: url("./textures/grass.png"); 
 }
@@ -293,22 +281,21 @@ body {
   height: calc(var(--grid-cell) * 0.5);
   position: absolute;
   overflow: hidden;
-  z-index: 20; /* ez szabályozza a layer elhelyezkedését */
-  border: 1px red solid;
-  transform: translate(calc(var(--grid-cell) * 0.25), calc(var(--grid-cell) * 0.25)); /* Add offset to center the character */
+  z-index: 20;
+  transform: translate(calc(var(--grid-cell) * 0.25), calc(var(--grid-cell) * 0.25));
 }
 
 .shadow {
   width: calc(var(--grid-cell) * 0.5);
   height: calc(var(--grid-cell) * 0.5); 
   position: absolute;
-  background: url("https://assets.codepen.io/21542/DemoRpgCharacterShadow.png") no-repeat;
+  background: url("./textures/shadow.png") no-repeat;
   background-size: 100%;
 }
 
 .character_spritesheet {
-  position: fixed;
-  background: url("textures/character.png") no-repeat;
+  position: absolute;
+  background: url("./textures/character.png") no-repeat;
   background-size: 100%;
   width: calc(var(--grid-cell) * 2);
   height: calc(var(--grid-cell) * 2); 

@@ -1,6 +1,8 @@
 import { Character } from "./Character.js";
-import { GameObject } from "./GameObject.js"; // assuming separate file
+import { GameObject, OBJECT_TYPES } from "./GameObject.js";
 import { ItemBar } from "./ItemBar.js";
+import { PopupManager } from "./PopupManager.js";
+import { InteractionDisplay } from './InteractionDisplay.js';
 
 const TILE_TYPES = {
   0: { name: 'floor'},
@@ -21,12 +23,11 @@ const TILE_TYPES = {
   15: { name: 'wall_corner_90_c'},
   16: { name: 'wall_corner_90_d'},
   17: { name: 'wall_corner_90_b_2'},
-  18: { name: 'wall_cables'},
-  19: { name: 'wall_rack'},
-  20: { name: 'wall_fan'},
+  18: { name: 'floor_panel'},
+  19: { name: 'emergency_light'},
+  20: { name: 'control_panel'},
   99: { name: 'empty'},
 };
-
 
 
 export class GameArea 
@@ -36,6 +37,8 @@ export class GameArea
     this.characterElement = document.querySelector(".character");
     this.mapElement = document.querySelector(".map");
     this.roomHeader = document.querySelector(".room-header");
+    this.popupManager = new PopupManager();
+    this.interactionDisplay = new InteractionDisplay();
 
     this.roomNames = {
       'main': 'Main Hall',
@@ -44,20 +47,21 @@ export class GameArea
     };
 
     this.currentRoom = 'main';
+    this.lastPosition = { x: 0, y: 0 };
     this.rooms = {
       'main': {
         map: [
-          [  6,  2,  2,  2,  2, 13,  4, 14,  2,  2,  2,  7, 99, 99], // 01
-          [  1, 10, 10, 10, 18, 10,  0, 10, 10, 18, 10, 14,  7, 99], // 02
+          [  6,  2,  2,  2,  2, 13,  4, 14,  2,  2,  2,  7, 99, 99], // 01          
+          [  1, 10, 10, 10, 10, 10,  0, 10, 10, 10, 10, 14,  7, 99], // 02
           [  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 10, 12, 99], // 03
           [  1,  0,  0, 15,  3,  3,  3, 17,  0,  0,  0,  0, 12, 99], // 04
           [  1,  0,  0, 12, 99,  6,  2, 13,  0,  0,  0,  0, 12, 99], // 06
-          [  1,  0,  0, 16,  2, 13, 19, 10,  0,  0,  0,  0, 16,  2], // 07
-          [  1,  0,  0, 10, 18, 20,  0,  0,  0,  0,  0,  0, 10, 10], // 08
+          [  1,  0,  0, 16,  2, 13, 10, 10,  0,  0,  0,  0, 16,  2], // 07
+          [  1,  0,  0, 10, 10, 10,  0,  0,  0,  0,  0,  0, 10, 10], // 08
           [  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4], // 09
           [  8,  3, 17,  0,  0,  0,  0,  0,  0, 15, 17,  0, 15,  3], // 10
           [ 99, 99,  1,  0,  0,  0,  0,  0,  0, 16, 13,  0, 12, 99], // 11
-          [ 99, 99,  1,  0,  0,  0,  0,  0,  0, 18, 20,  0, 12, 99], // 12
+          [ 99, 99,  1,  0,  0,  0,  0,  0,  0, 10, 10,  0, 12, 99], // 12
           [ 99, 99,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0, 12, 99], // 13
           [ 99, 99,  8,  3,  3,  3,  3,  3,  3,  3,  3,  3,  9, 99], // 14
         ],
@@ -207,22 +211,22 @@ export class GameArea
     }
   }
 
-  handleDoorInteraction(x, y) 
-  {
+  handleDoorInteraction(x, y) {
+    this.lastPosition = { x: this.character.tileX, y: this.character.tileY };
+    
     if (this.currentRoom === 'main') {
       if (y === 0) {
         this.switchRoom('storage', 5.5, 1.5);
       }
       else if (x === this.levelMap[0].length - 1) {
-        this.switchRoom('lab', 1.5, 5.5);
+        this.switchRoom('lab', 1.5, 5);
       }
     } 
     else if (this.currentRoom === 'storage') {
       this.switchRoom('main', 6.5, 1.5);
     }
     else if (this.currentRoom === 'lab') {
-      console.log(this.character.tileX, this.character.tileY);
-      this.switchRoom('main', 12.5, 7.5);
+      this.switchRoom('main', this.lastPosition.x + 11, this.lastPosition.y + 2.5);
     }
   }
 
@@ -292,5 +296,85 @@ export class GameArea
   {
     this.character.updatePosition();
     requestAnimationFrame(() => this.loop());
+  }
+
+  isWalkable(x, y, halfSize = 0.125) {
+    const left   = (x - halfSize);
+    const right  = (x + halfSize);
+    const top    = (y - halfSize);
+    const bottom = (y + halfSize);
+
+    const leftTile   = Math.floor(left);
+    const rightTile  = Math.ceil(right) - 1;
+    const topTile    = Math.floor(top);
+    const bottomTile = Math.ceil(bottom) - 1;
+
+    // Check if any of the coordinates are out of bounds
+    if (leftTile < 0 || rightTile >= this.levelMap[0].length ||
+        topTile < 0 || bottomTile >= this.levelMap.length) {
+      return false;
+    }
+
+    for (let y = topTile; y <= bottomTile; y++) {
+      for (let x = leftTile; x <= rightTile; x++) {
+        const tile = this.levelMap[y][x];
+        if (tile === undefined || ![0, 4, 5, 11].includes(tile)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  checkObjectAtPosition(x, y) {
+    // Convert map coordinates to object matrix coordinates (2x2 mapping)
+    const objX = x * 2;
+    const objY = y * 2;
+
+    // Check all four object positions that correspond to this tile
+    for (let dy = 0; dy < 2; dy++) {
+      for (let dx = 0; dx < 2; dx++) {
+        const objectId = this.rooms[this.currentRoom].objects[objY + dy][objX + dx];
+        if (objectId && objectId > 0 && OBJECT_TYPES[objectId]) {
+          return OBJECT_TYPES[objectId];
+        }
+      }
+    }
+    return null;
+  }
+
+  updateInteractionDisplay(x, y) {
+    const objectInfo = this.checkObjectAtPosition(Math.floor(x), Math.floor(y));
+    
+    if (objectInfo) {
+      this.interactionDisplay.showInteraction(
+        objectInfo.name,
+        objectInfo.texture,
+        objectInfo.display_name,
+        objectInfo.interactable,
+        objectInfo.description
+      );
+    } else {
+      this.interactionDisplay.clear();
+    }
+  }
+
+  handleInteraction(objectInfo, targetX, targetY) {
+    if (!objectInfo) return;
+
+    console.log('Interacting with:', objectInfo.display_name);
+    
+    // Handle signpost interactions
+    if (objectInfo.name === 'signpost' && objectInfo.text) {
+      this.popupManager.showPopup(objectInfo.text);
+      return;
+    }
+    
+    // Handle door interactions
+    if (objectInfo.name === 'door') {
+      this.handleDoorInteraction(targetX, targetY);
+      return;
+    }
+    // Add other special interactions here as needed
   }
 }
