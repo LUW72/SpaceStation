@@ -301,18 +301,48 @@ body {
   /* Fix antenna texture display */
   background-position: center;
   background-size: 100% auto;
-  transform: translateY(-75px); /* Adjust vertical position instead of background-position-y */
+  /* transform: translateY(-75px); Adjust vertical position instead of background-position-y */
+  /* Convert fixed pixel transform to viewport units */
+  transform: translateY(-11vh); /* Converted from -75px, assuming viewport height relationship */
  /* Offset the transform to maintain original position */
 }
 
+.object.antenna_a_base {
+  background-image: url("./textures/obj_antenna_01_base.png");
+}
+
+.object.antenna_a_middle {
+  background-image: url("./textures/obj_antenna_01_middle.png");
+  z-index: 40;
+}
+
+.object.antenna_a_top {
+  background-image: url("./textures/obj_antenna_01_top.png");
+  z-index: 40;
+}
 
 .object.door {
   background-color: #99d00c;
 }
 
 
+.object.workstation_a {
+  background-image: url("./textures/obj_workstation_a.png");
+  z-index: 40;
+}
 
+.object.workstation_b {
+  background-image: url("./textures/obj_workstation_b.png");
+  z-index: 40;
+}
 
+.object.workstation_c {
+  background-image: url("./textures/obj_workstation_c.png");
+} 
+
+.object.workstation_d {
+  background-image: url("./textures/obj_workstation_d.png");
+}
 
 /* === Character === */
 
