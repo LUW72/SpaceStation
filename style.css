@@ -216,6 +216,11 @@ body {
   z-index: 0;
 }
 
+.object.floor_cable {
+  background-image: url("./textures/floor_01_cable.png");
+  z-index: 0;
+}
+
 .object.floor_drain {
   background-image: url("./textures/floor_01_drain.png");
   z-index: 0;  
@@ -240,13 +245,15 @@ body {
 
 .object.vending_mach {
   background-image: url("./textures/obj_vendingMach.png");
-
-  transform: scale(2.0);
-  transform-origin: center; 
-  pointer-events: none; /* Optional: so the object doesn't block input */
+  width: calc(var(--pixel-size) * 20);  /* Doubled the width */
+  height: calc(var(--pixel-size) * 16);  /* Doubled the height */
+  transform-origin: center;
+  pointer-events: none;
   z-index: 12;
-  background-position-y: -10px;  
-
+  background-position: center;
+  background-size: 100% 100%;
+  background-color: #07c2cc;
+  transform: translateY(-20px);
 }
 
 .object.table {
@@ -262,17 +269,68 @@ body {
   background-position-y: -3px;
 }
 
+.object.plant {
+  background-image: url("./textures/obj_plant.png");
+}
+
 .object.antenna {
   background-image: url("./textures/obj_antenna.png");
-  transform-origin: center; 
-  pointer-events: none; 
+  width: calc(var(--pixel-size) * 8);  /* Standard object width */
+  height: calc(var(--pixel-size) * 32);  /* Taller height for antenna shape */
+  transform-origin: bottom center;
+  pointer-events: none;
+  z-index: 40;  /* Lower z-index so character can pass in front */
 
+  /* Ensure full texture display even if it extends beyond bounds */
+  overflow: visible;
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  /* Fix antenna texture display */
+  background-position: center;
+  background-size: 100% auto;
+  /* transform: translateY(-75px); Adjust vertical position instead of background-position-y */
+  /* Convert fixed pixel transform to viewport units */
+  transform: translateY(-11vh); /* Converted from -75px, assuming viewport height relationship */
+ /* Offset the transform to maintain original position */
+}
+
+.object.antenna_a_base {
+  background-image: url("./textures/obj_antenna_01_base.png");
+}
+
+.object.antenna_a_middle {
+  background-image: url("./textures/obj_antenna_01_middle.png");
+  z-index: 40;
+}
+
+.object.antenna_a_top {
+  background-image: url("./textures/obj_antenna_01_top.png");
+  z-index: 40;
+}
+
+.object.door {
+  background-color: #99d00c;
 }
 
 
+.object.workstation_a {
+  background-image: url("./textures/obj_workstation_a.png");
+  z-index: 40;
+}
 
+.object.workstation_b {
+  background-image: url("./textures/obj_workstation_b.png");
+  z-index: 40;
+}
 
+.object.workstation_c {
+  background-image: url("./textures/obj_workstation_c.png");
+} 
 
+.object.workstation_d {
+  background-image: url("./textures/obj_workstation_d.png");
+}
 
 /* === Character === */
 

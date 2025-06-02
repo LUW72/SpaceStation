@@ -108,9 +108,62 @@ export class Character {
     if (held === this.directions.up) newY -= step;
 
       this.character.setAttribute("facing", held);
+    }
 
-    // Check if new position is walkable
-    if (this.gameArea.isWalkable(newX, newY)) {
+    // Check tile you're moving into
+    const halfSize = 0.125;
+    
+    const left   = (newX - halfSize);
+    const right  = (newX + halfSize);
+    const top    = (newY - halfSize);
+    const bottom = (newY + halfSize);
+
+    const leftTile   = Math.floor(left);
+    const rightTile  = Math.ceil(right) - 1;
+    const topTile    = Math.floor(top);
+    const bottomTile = Math.ceil(bottom) - 1;
+
+    let isWalkable = true;
+    
+    // Check tile map collisions
+    for (let y = topTile; y <= bottomTile; y++) {
+      for (let x = leftTile; x <= rightTile; x++) {
+        const tile = this.levelMap?.[y]?.[x];
+        if (tile === undefined || ![0, 5, 11].includes(tile)) {
+          isWalkable = false;
+          break;
+        }
+      }
+      if (!isWalkable) break;
+    }
+
+    // Check object collisions if tile is walkable
+    if (isWalkable && this.gameArea) {
+      const objMatrix = this.gameArea.rooms[this.gameArea.currentRoom].objects;
+      
+      // Convert map coordinates to object matrix coordinates (2x2 mapping)
+      const objLeft = Math.floor(left * 2);
+      const objRight = Math.ceil(right * 2) - 1;
+      const objTop = Math.floor(top * 2);
+      const objBottom = Math.ceil(bottom * 2) - 1;
+
+      // Check for solid objects
+      for (let y = objTop; y <= objBottom; y++) {
+        for (let x = objLeft; x <= objRight; x++) {
+          const objectId = objMatrix?.[y]?.[x];
+          if (objectId && objectId > 0) {
+            const objectInfo = OBJECT_TYPES[objectId];
+            if (objectInfo && objectInfo.solid) {
+              isWalkable = false;
+              break;
+            }
+          }
+        }
+        if (!isWalkable) break;
+      }
+    }
+
+    if (isWalkable) {
       this.tileX = newX;
       this.tileY = newY;
       this.lastMoveTime = now;
@@ -127,8 +180,78 @@ export class Character {
     this.map.style.transform = `translate3d(${-x + camera_left}px, ${-y + camera_top}px, 0)`;
     this.character.style.transform = `translate3d(${x}px, ${y}px, 0)`;
 
-    // Update interaction display based on current position
-    this.gameArea.updateInteractionDisplay(this.tileX, this.tileY);
+    // Check what's in front of the character
+    this.checkFrontTile();
+  }
+
+  checkFrontTile() {
+    if (!this.gameArea) return;
+
+    // First check the current tile the character is standing on
+    const currentX = Math.floor(this.tileX);
+    const currentY = Math.floor(this.tileY);
+    
+    // Convert current position to object matrix coordinates (2x2 mapping)
+    const currentObjX = currentX * 2;
+    const currentObjY = currentY * 2;
+
+    // Check the current tile first
+    for (let dy = 0; dy < 2; dy++) {
+        for (let dx = 0; dx < 2; dx++) {
+            const objectId = this.gameArea.rooms[this.gameArea.currentRoom].objects[currentObjY + dy][currentObjX + dx];
+            if (objectId && objectId > 0 && OBJECT_TYPES[objectId]) {
+                const objectInfo = OBJECT_TYPES[objectId];
+                this.interactionDisplay.showInteraction(
+                    objectInfo.name,
+                    objectInfo.texture,
+                    objectInfo.display_name,
+                    objectInfo.interactable,
+                    objectInfo.description
+                );
+                
+                return; // Exit after finding the first object
+            }
+        }
+    }
+
+    // If nothing found on current tile, check the tile in front
+    let offsetX = 0;
+    let offsetY = 0;
+
+    const facing = this.character.getAttribute("facing");
+
+    if (facing === "up") offsetY = -1;
+    if (facing === "down") offsetY = 1;
+    if (facing === "left") offsetX = -1;
+    if (facing === "right") offsetX = 1;
+
+    const targetX = Math.floor(this.tileX + offsetX);
+    const targetY = Math.floor(this.tileY + offsetY);
+    
+    // Convert map coordinates to object matrix coordinates (2x2 mapping)
+    const objX = targetX * 2;
+    const objY = targetY * 2;
+
+    // Check all four object positions that correspond to this tile
+    for (let dy = 0; dy < 2; dy++) {
+        for (let dx = 0; dx < 2; dx++) {
+            const objectId = this.gameArea.rooms[this.gameArea.currentRoom].objects[objY + dy][objX + dx];
+            if (objectId && objectId > 0 && OBJECT_TYPES[objectId]) {
+                const objectInfo = OBJECT_TYPES[objectId];
+                this.interactionDisplay.showInteraction(
+                    objectInfo.name,
+                    objectInfo.texture,
+                    objectInfo.display_name,
+                    objectInfo.interactable,
+                    objectInfo.description
+                );
+                return; // Exit after finding the first object
+            }
+        }
+    }
+
+    // If no objects found in either position, clear the display
+    this.interactionDisplay.clear();
   }
 
   checkInteraction() {
