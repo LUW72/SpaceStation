@@ -170,6 +170,19 @@ body {
   background-image: url("./textures/wall_top_2.png"); 
 }
 
+
+.tile.wall_cables {
+  background-image: url("./textures/wall_cables.png"); 
+}
+
+.tile.wall_rack {
+  background-image: url("./textures/wall_rack.png"); 
+}
+
+.tile.wall_fan {
+  background-image: url("./textures/wall_fan.png"); 
+}
+
 .tile.grass {
   background-image: url("./textures/grass.png"); 
 }
@@ -259,13 +272,10 @@ body {
   transform: translateY(-20px);
 }
 
-.object.table {
-  background-color: saddlebrown;
+.object.trashcan {
+  background-image: url("./textures/obj_trashcan.png");
 }
 
-.object.chest {
-  background-color: crimson;
-}
 
 .object.signpost {
   background-image: url("./textures/obj_sign.png");
@@ -279,6 +289,7 @@ body {
 .object.key_plant {
   background-image: url("./textures/obj_plant.png");
 }
+
 
 .object.antenna {
   background-image: url("./textures/obj_antenna.png");
@@ -316,13 +327,49 @@ body {
   z-index: 40;
 }
 
-.object.door {
-  background-color: #99d00c;
+.object.antenna_b_base {
+  background-image: url("./textures/obj_antenna_02_base.png");
 }
+
+.object.antenna_b_middle {
+  background-image: url("./textures/obj_antenna_02_middle.png");
+  z-index: 40;
+}
+
+.object.antenna_b_top {
+  background-image: url("./textures/obj_antenna_02_top.png");
+  z-index: 40;
+}
+
+.object.antenna_b2_middle {
+  background-image: url("./textures/obj_antenna_02_middle_B.png");
+  z-index: 40;
+}
+
+.object.antenna_b2_top {
+  background-image: url("./textures/obj_antenna_02_top_B.png");
+  z-index: 40;
+}
+
+.object.bottles {
+  background-image: url("./textures/obj_bottles.png");
+  z-index: 40;
+}
+
+.object.dismantled_ventillation_unit {
+  background-image: url("./textures/obj_dismantled_ventillator.png");
+}
+
+
 
 
 .object.workstation_a {
   background-image: url("./textures/obj_workstation_a.png");
+  z-index: 40;
+}
+
+.object.workstation_a_papiers {
+  background-image: url("./textures/obj_workstation_a_papiers.png");
   z-index: 40;
 }
 
@@ -338,6 +385,8 @@ body {
 .object.workstation_d {
   background-image: url("./textures/obj_workstation_d.png");
 }
+
+
 
 /* === Character === */
 
