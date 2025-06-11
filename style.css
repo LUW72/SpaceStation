@@ -343,14 +343,6 @@ body {
   transform: translate(calc(var(--grid-cell) * 0.25), calc(var(--grid-cell) * 0.25));
 }
 
-.shadow {
-  width: calc(var(--grid-cell) * 0.5);
-  height: calc(var(--grid-cell) * 0.5); 
-  position: absolute;
-  background: url("./textures/shadow.png") no-repeat;
-  background-size: 100%;
-}
-
 .character_spritesheet {
   position: absolute;
   background: url("./textures/character.png") no-repeat;
