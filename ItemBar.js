@@ -1,6 +1,6 @@
 export class ItemBar {
     constructor() {
-        this.items = [];
+        this.items = [];  // Will now store objects with {type, count}
         this.selectedItemIndex = -1;
         this.container = document.querySelector('.item-bar');
         this.initializeKeyBindings();
@@ -17,15 +17,31 @@ export class ItemBar {
     }
 
     addItem(itemType) {
-        if (this.items.length < 6) {
-            this.items.push(itemType);
-            this.updateDisplay();
+        // Check if the item already exists
+        const existingItemIndex = this.items.findIndex(item => item.type === itemType);
+        console.log("Trying to add:", itemType);
+console.log("Current items:", this.items);
+console.log("Found existing index:", existingItemIndex);
+        console.log(`Adding item: ${itemType}, existing index: ${existingItemIndex}`);
+        
+        if (existingItemIndex !== -1) {
+            // Item exists, increment counter
+            this.items[existingItemIndex].count++;
+        } else if (this.items.length < 6) {
+            // New item, add it with count 1
+            this.items.push({ type: itemType, count: 1 });
         }
+        this.updateDisplay();
     }
 
     removeItem(index) {
         if (index >= 0 && index < this.items.length) {
-            this.items.splice(index, 1);
+            const item = this.items[index];
+            if (item.count > 1) {
+                item.count--;
+            } else {
+                this.items.splice(index, 1);
+            }
             this.updateDisplay();
         }
     }
@@ -48,7 +64,16 @@ export class ItemBar {
             if (index < this.items.length) {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'item';
-                itemElement.classList.add(this.items[index]);
+                itemElement.classList.add(this.items[index].type);
+                
+                // Add counter if count > 1
+                if (this.items[index].count > 1) {
+                    const counter = document.createElement('div');
+                    counter.className = 'item-counter';
+                    counter.textContent = this.items[index].count;
+                    itemElement.appendChild(counter);
+                }
+                
                 slot.appendChild(itemElement);
             }
 

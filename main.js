@@ -1,3 +1,3 @@
-import { GameArea } from "./GameArea.js";
+import GameArea from "./GameArea.js";
 
 const game = new GameArea();

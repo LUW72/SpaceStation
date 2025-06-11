@@ -9,7 +9,13 @@ export class PopupManager {
         
         // Add keyboard listener for closing popup with ESC
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Enter') {
+                if (this.isPopupVisible()) {
+                    this.hidePopup();
+                } else {
+                    // If popup is not visible, show it with a default message
+                    this.showPopup("Press Space to close this popup.");
+                }
                 this.hidePopup();
             }
         });

@@ -30,6 +30,7 @@ body {
   justify-content: center;
   height: 100vh;
   overflow: hidden;
+  
 }
 
 .pixel-art {
@@ -177,6 +178,8 @@ body {
   background-image: url("./textures/door_01.png"); 
 }
 
+
+
 .tile.empty {
   background-color: var(--bg);
 }
@@ -273,6 +276,10 @@ body {
   background-image: url("./textures/obj_plant.png");
 }
 
+.object.key_plant {
+  background-image: url("./textures/obj_plant.png");
+}
+
 .object.antenna {
   background-image: url("./textures/obj_antenna.png");
   width: calc(var(--pixel-size) * 8);  /* Standard object width */
@@ -342,6 +349,7 @@ body {
   z-index: 20;
   transform: translate(calc(var(--grid-cell) * 0.25), calc(var(--grid-cell) * 0.25));
 }
+
 
 .character_spritesheet {
   position: absolute;
@@ -413,6 +421,7 @@ body {
   image-rendering: pixelated;
 }
 
+
 /* Item types */
 .item.key {
   background-image: url('./textures/items/key.png');
@@ -424,6 +433,37 @@ body {
 
 .item.weapon {
   background-image: url('./textures/items/weapon.png');
+}
+
+.item.plant {
+  background-image: url("./textures/obj_plant.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.item.sign {
+  background-image: url("./textures/obj_sign.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.item-counter {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 10px;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1px 3px;
+  border-radius: 3px;
+  z-index: 2;
+  font-family:'Press Start 2P', monospace;
 }
 
 .interaction-display {
@@ -531,9 +571,78 @@ body {
   width: 100%;
   text-align: center;
   color: #ffffff;
-  font-family: monospace;
+  /* font-family: monospace; */
+   font-family: 'Press Start 2P', monospace;
   font-size: calc(var(--pixel-size) * 6);
   font-weight: bold;
   text-shadow: calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 1) rgba(0, 0, 0, 0.5);
   z-index: 2;
 }
+
+
+
+/* Fullscreen dark overlay */
+.men-popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Central menu container */
+.men-popup-content {
+  background: #1e1e1e;
+  color: #00ffcc;
+  padding: 40px 32px;
+  border: 4px solid #00ffcc;
+  border-radius: 16px;
+  box-shadow: 0 0 20px #00ffcc88;
+  text-align: center;
+  font-family: 'Press Start 2P', monospace;
+  width: 90%;
+  max-width: 420px;
+}
+
+/* Menu title */
+.men-popup-content h2 {
+  margin-bottom: 32px;
+  font-size: 16px;
+  color: #ffffff;
+  text-shadow: 0 0 5px #00ffcc;
+}
+
+/* Buttons shared style */
+.menu-button {
+  display: block;
+  width: 100%;
+  background: transparent;
+  color: #00ffcc;
+  border: 2px solid #00ffcc;
+  border-radius: 8px;
+  padding: 14px 10px;
+  margin: 12px 0;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  font-family: 'Press Start 2P', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Hover effect */
+.menu-button:hover {
+  background-color: #00ffcc;
+  color: #000;
+  box-shadow: 0 0 12px #00ffcc;
+  transform: scale(1.05);
+}
+
+
+
+
+
+

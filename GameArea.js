@@ -3,6 +3,7 @@ import { GameObject, OBJECT_TYPES } from "./GameObject.js";
 import { ItemBar } from "./ItemBar.js";
 import { PopupManager } from "./PopupManager.js";
 import { InteractionDisplay } from './InteractionDisplay.js';
+import { Men } from "./Men.js";
 
 const TILE_TYPES = {
   0: { name: 'floor'},
@@ -30,7 +31,7 @@ const TILE_TYPES = {
 };
 
 
-export class GameArea 
+export default class GameArea 
 {
   constructor() 
   {
@@ -39,6 +40,13 @@ export class GameArea
     this.roomHeader = document.querySelector(".room-header");
     this.popupManager = new PopupManager();
     this.interactionDisplay = new InteractionDisplay();
+    this.itemBar = new ItemBar();
+    const mainMenu = new Men("Welcome to Space Station!");
+/* if (!localStorage.getItem("mainMenuShown")) { */
+/*   const mainMenu = new Men("Welcome to Space Station!"); */
+  mainMenu.show();
+/*   localStorage.setItem("mainMenuShown", "true");
+} */
 
     this.roomNames = {
       'main': 'Main Hall',
@@ -77,7 +85,7 @@ export class GameArea
           [0,0, 0,0, 0,1, 0,1, 6,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
     
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,2, 0,0, 0,0, 0,0, 0,0, 0,0, 0,1, 0,0, 0,0], // 04
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,42, 0,0, 0,0, 0,0, 0,0, 0,0], 
+          [0,0, 100,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,42, 0,0, 0,0, 0,0, 0,0, 0,0], 
     
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,41, 1,0, 0,0, 0,0, 0,0, 0,0], // 05
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,40, 0,0, 0,0, 0,0, 0,0, 0,0],
@@ -101,7 +109,7 @@ export class GameArea
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 24,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
     
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0], // 12
-          [0,0, 0,0, 0,0, 0,0, 0,0, 0,3, 0,0, 0,0, 3,0, 0,0, 0,0, 0,0, 0,0, 0,0],
+          [0,0, 0,0, 0,0, 0,0, 0,0, 0,100, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0],
     
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0], // 13
           [0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
@@ -366,23 +374,57 @@ export class GameArea
       this.interactionDisplay.clear();
     }
   }
+handleInteraction(objectInfo, targetX, targetY) {
+  if (!objectInfo) return;
 
-  handleInteraction(objectInfo, targetX, targetY) {
-    if (!objectInfo) return;
+  console.log('Interacting with:', objectInfo.display_name);
 
-    console.log('Interacting with:', objectInfo.display_name);
-    
-    // Handle signpost interactions
-    if (objectInfo.name === 'signpost' && objectInfo.text) {
-      this.popupManager.showPopup(objectInfo.text);
-      return;
-    }
-    
-    // Handle door interactions
-    if (objectInfo.name === 'door') {
-      this.handleDoorInteraction(targetX, targetY);
-      return;
-    }
-    // Add other special interactions here as needed
+  // Handle signpost interactions
+  if (objectInfo.name === 'signpost' && objectInfo.text) {
+    this.popupManager.showPopup(objectInfo.text);
+    return;
   }
+
+  if (objectInfo.name === 'vending_mach') {
+  // Find index of plant item in item bar
+  const plantIndex = this.itemBar.items.findIndex(item => item.type === 'plant');
+
+  if (plantIndex !== -1) {
+    // Remove one plant from that slot
+    this.itemBar.removeItem(plantIndex);
+
+    // Add a sign to the item bar
+    this.itemBar.addItem('sign');
+
+    this.popupManager.showPopup('Used coin, received.... key?');
+  } else {
+    this.popupManager.showPopup('Needs coin to use vending machine');
+  }
+  return;
+}
+  
+/*     this.popupManager.showPopup(objectInfo.text);
+    return;
+  } */
+  
+  // Handle door interactions
+  if (objectInfo.name === 'door') {
+    this.handleDoorInteraction(targetX, targetY);
+    return;
+  }
+
+  // Handle floor cable interaction, replace 100 with 101
+  if (objectInfo.objectId === 100) {
+    console.log('Interacting with plant aaa');
+    // Change objectId from 100 to 101
+    objectInfo.objectId = 101;
+
+    // Also add the item as before
+    this.itemBar.addItem('plant');
+    return;
+  }
+
+  // Add other special interactions here as needed
+}
+
 }

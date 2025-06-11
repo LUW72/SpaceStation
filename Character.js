@@ -7,7 +7,7 @@ export class Character {
     this.character = characterElement;
     this.levelMap = levelMap;
     this.tileX = 2.0;
-    this.tileY = 2.0;
+    this.tileY = 3.0;
     this.held_directions = [];
     this.moveCooldown = 100;
     this.lastMoveTime = 0;
@@ -107,8 +107,7 @@ export class Character {
     if (held === this.directions.down) newY += step;
     if (held === this.directions.up) newY -= step;
 
-      this.character.setAttribute("facing", held);
-    }
+    this.character.setAttribute("facing", held);
 
     // Check tile you're moving into
     const halfSize = 0.125;
